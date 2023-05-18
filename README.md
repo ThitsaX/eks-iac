@@ -11,3 +11,6 @@ edit [Terraform/env.hcl](Terraform/env.hcl)
 ```terraform init --backend-config=../backend/backend.hcl```
 ```terraform plan --var-file=../env.hcl```
 ```terraform apply --var-file=../env.hcl```
+
+
+REF : https://medium.com/devops-mojo/terraform-provision-amazon-eks-cluster-using-terraform-deploy-create-aws-eks-kubernetes-cluster-tf-4134ab22c594]
