@@ -10,3 +10,4 @@ ng_desired_size = 2
 ng_min_size = 1
 ng_max_size = 5
 disk_size = 20
+ingress_ext_name = "nginx"

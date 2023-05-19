@@ -1,0 +1,14 @@
+
+resource "helm_release" "argocd" {
+  name       = "argo-cd"
+  repository = "https://charts.bitnami.com/bitnami"
+  chart      = "argo-cd"
+  version    = "4.7.2"
+  namespace  = "argocd"
+  wait       = false
+  create_namespace = true
+  values     = [templatefile("templates/values-argocd.yaml.tpl", {
+    ingress_ext_name = var.ingress_ext_name
+  })
+  ]
+}

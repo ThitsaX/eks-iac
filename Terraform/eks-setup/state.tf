@@ -13,6 +13,6 @@ resource "aws_s3_bucket_object" "kubeconfig" {
   bucket = "${local.backend_name}-state"
   key    = "kubeconfig"
   acl    = "private"  # or can be "public-read"
-  source = "kubeconfig"
+  source = "../kubeconfig"
   server_side_encryption = "AES256"
 }

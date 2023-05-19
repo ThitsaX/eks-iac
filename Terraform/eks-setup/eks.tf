@@ -90,5 +90,5 @@ module "eks-kubeconfig" {
 
 resource "local_file" "kubeconfig" {
   content  = module.eks-kubeconfig.kubeconfig
-  filename = "kubeconfig"
+  filename = "../kubeconfig"
 }

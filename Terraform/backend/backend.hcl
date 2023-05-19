@@ -1,6 +1,0 @@
-region         = "ap-southeast-1"
-bucket         = "test-pph-state"
-dynamodb_table = "test-pph-lock"
-profile        = ""
-role_arn       = ""
-encrypt        = "true"
