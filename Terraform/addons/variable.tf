@@ -80,3 +80,16 @@ variable "disk_size" {
   type = number
   default = 20
 }
+variable "helm_external_dns_version" {
+  description = "helm external dns version"
+}
+
+variable "external_dns_namespace" {
+  description = "Kubernetes namespace to install external dns into"
+  type        = string
+  default     = "external-dns"
+}
+variable "ingress_ext_name" {
+  description = "ingress ext name"
+  type = string
+}

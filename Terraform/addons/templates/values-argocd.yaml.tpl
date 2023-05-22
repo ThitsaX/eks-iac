@@ -14,7 +14,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: ""
+  storageClass: longhorn
 
 ## @section Common parameters
 
@@ -3411,6 +3411,8 @@ redis:
   ## @param redis.architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
   ## TODO(miguelaeh): We need to test the chart with redis sentinel, it seems to be supported at: https://github.com/argoproj/argo-cd/blob/2a410187565e15633b6f2a8c8d8da22cf02b257d/util/cache/cache.go#L40
   ##
+  persistence:
+    persistence: longhorn
   architecture: standalone
 
 ##

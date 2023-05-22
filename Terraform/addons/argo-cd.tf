@@ -7,6 +7,7 @@ resource "helm_release" "argocd" {
   namespace  = "argocd"
   wait       = false
   create_namespace = true
+  depends_on = [ helm_release.longhorn ]
   values     = [templatefile("templates/values-argocd.yaml.tpl", {
     ingress_ext_name = var.ingress_ext_name
   })

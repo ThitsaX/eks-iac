@@ -80,6 +80,20 @@ resource "aws_security_group_rule" "cluster_outbound" {
 }
 
 
+resource "aws_eks_addon" "kube-proxy" {
+  cluster_name         = "${var.name}-cluster"
+  addon_name           = "kube-proxy"
+  addon_version        = "v1.26.2-eksbuild.1"
+  resolve_conflicts    = "OVERWRITE"
+  # configuration_values = "{\"replicaCount\":4,\"resources\":{\"limits\":{\"cpu\":\"100m\",\"memory\":\"150Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"150Mi\"}}}"
+}
+resource "aws_eks_addon" "vpc-cni" {
+  cluster_name         = "${var.name}-cluster"
+  addon_name           = "vpc-cni"
+  addon_version        = "v1.12.6-eksbuild.1"
+  resolve_conflicts    = "OVERWRITE"
+  # configuration_values = "{\"replicaCount\":4,\"resources\":{\"limits\":{\"cpu\":\"100m\",\"memory\":\"150Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"150Mi\"}}}"
+}
 module "eks-kubeconfig" {
   source     = "hyperbadger/eks-kubeconfig/aws"
   version    = "1.0.0"
