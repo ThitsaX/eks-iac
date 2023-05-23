@@ -91,7 +91,7 @@ controller:
   ## IngressClass resources are supported since k8s >= 1.18 and required since k8s >= 1.19
   ingressClassResource:
     # -- Name of the ingressClass
-    name: nginx
+    name: ${ingress-class-name}
     # -- Is this ingressClass enabled or not
     enabled: true
     # -- Is this the default ingressClass for the cluster
@@ -412,7 +412,10 @@ controller:
     # Will be ignored for Kubernetes versions older than 1.20
     ##
     appProtocol: true
-    annotations: {}
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: "${internal_lb}"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: external
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
     labels: {}
     # clusterIP: ""
 

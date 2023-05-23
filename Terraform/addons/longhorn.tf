@@ -1,3 +1,16 @@
+resource "kubernetes_annotations" "disable-default-storageclass" {
+  api_version = "storage.k8s.io/v1"
+  kind        = "StorageClass"
+  force       = "true"
+
+  metadata {
+    name = "gp2"
+  }
+  annotations = {
+    "storageclass.kubernetes.io/is-default-class" = "false"
+  }
+}
+
 resource "helm_release" "longhorn" {
   name       = "longhorn"
   repository = "https://charts.longhorn.io"
@@ -6,13 +19,14 @@ resource "helm_release" "longhorn" {
   namespace  = "longhorn-system"
   wait       = false
   create_namespace = true
-  depends_on = [ resource.kubectl_manifest.longhorn_init ]
+  depends_on = [ kubectl_manifest.longhorn_init ]
   values = [
     "${file("./templates/values-longhorn.yaml")}"
   ]
 }
 
 resource "kubectl_manifest" "longhorn_system" {
+  depends_on = [  kubernetes_annotations.disable-default-storageclass ]
   yaml_body= <<YAML
 apiVersion: v1
 kind: Namespace
