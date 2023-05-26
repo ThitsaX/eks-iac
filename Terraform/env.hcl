@@ -1,5 +1,6 @@
-name="pph"
-region="ap-southeast-1"
+name= "pph"
+environment = "testing"
+region= "ap-southeast-1"
 vpc_cidr = "10.0.0.0/16"
 enable_dns_hostname = true
 enable_dns_support = true

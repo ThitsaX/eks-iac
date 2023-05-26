@@ -95,15 +95,30 @@ resource "aws_eks_addon" "vpc-cni" {
   resolve_conflicts    = "OVERWRITE"
   # configuration_values = "{\"replicaCount\":4,\"resources\":{\"limits\":{\"cpu\":\"100m\",\"memory\":\"150Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"150Mi\"}}}"
 }
-module "eks-kubeconfig" {
-  source     = "hyperbadger/eks-kubeconfig/aws"
-  version    = "1.0.0"
+# module "eks-kubeconfig" {
+#   source     = "hyperbadger/eks-kubeconfig/aws"
+#   version    = "1.0.0"
 
-  depends_on = [aws_eks_cluster.eks]
-  cluster_id =  aws_eks_cluster.eks.id
+#   depends_on = [aws_eks_cluster.eks]
+#   cluster_id =  aws_eks_cluster.eks.id
+#   }
+
+data "aws_eks_cluster_auth" "cluster" {
+  depends_on = [ aws_eks_node_group.eks ]
+  name = aws_eks_cluster.eks.name
+}
+
+locals {
+  depends_on = [ data.aws_eks_cluster_auth.cluster ]
+  kubeconfig = templatefile("templates/kubeconfig.tpl", {
+    cluster_name                      = aws_eks_cluster.eks.name
+    cluster_endpoint                  = aws_eks_cluster.eks.endpoint
+    cluster_ca_certificate            = aws_eks_cluster.eks.certificate_authority[0].data
+    cluster_token                     = data.aws_eks_cluster_auth.cluster.token
+})
   }
 
 resource "local_file" "kubeconfig" {
-  content  = module.eks-kubeconfig.kubeconfig
+  content  = local.kubeconfig
   filename = "../kubeconfig"
 }

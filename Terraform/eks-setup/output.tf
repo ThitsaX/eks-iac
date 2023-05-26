@@ -11,5 +11,5 @@ output "cluster_ca_certificate" {
 }
 output "kubeconfig" {
   sensitive = true
-  value = module.eks-kubeconfig.kubeconfig
+  value = local.kubeconfig
 }
