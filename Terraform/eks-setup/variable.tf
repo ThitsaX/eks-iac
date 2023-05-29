@@ -57,19 +57,37 @@ variable "k8s_version" {
   type = string
   default = "1.26"
 }
-variable "ng_desired_size" {
+variable "ng1_desired_size" {
   description = "node group desire size"
   type = number
   default = 2
 }
 
-variable "ng_min_size" {
+variable "ng1_min_size" {
   description = "node group min size"
   type = number
   default = 1
 }
 
-variable "ng_max_size" {
+variable "ng1_max_size" {
+  description = "node group max size"
+  type = number
+  default= 5
+}
+
+variable "ng2_desired_size" {
+  description = "node group desire size"
+  type = number
+  default = 2
+}
+
+variable "ng2_min_size" {
+  description = "node group min size"
+  type = number
+  default = 1
+}
+
+variable "ng2_max_size" {
   description = "node group max size"
   type = number
   default= 5

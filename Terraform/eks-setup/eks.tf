@@ -104,7 +104,7 @@ resource "aws_eks_addon" "vpc-cni" {
 #   }
 
 data "aws_eks_cluster_auth" "cluster" {
-  depends_on = [ aws_eks_node_group.eks ]
+  depends_on = [ aws_eks_node_group.ng1 ]
   name = aws_eks_cluster.eks.name
 }
 
