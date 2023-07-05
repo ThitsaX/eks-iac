@@ -47,7 +47,7 @@ variable "tags" {
   }
 }
 
-variable "instance_type" {
+variable "ng1_instance_type" {
   description = "worker node type"
   type        = string
   default     = "t2.medium"
@@ -74,7 +74,11 @@ variable "ng1_max_size" {
   type = number
   default= 5
 }
-
+variable "ng2_instance_type" {
+  description = "worker node type"
+  type        = string
+  default     = "t2.medium"
+}
 variable "ng2_desired_size" {
   description = "node group desire size"
   type = number
