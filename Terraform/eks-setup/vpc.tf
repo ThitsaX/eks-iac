@@ -6,8 +6,8 @@ resource "aws_vpc" "eks" {
   enable_dns_support   = var.enable_dns_support
 
   tags = {
-    Name                                           = "${var.name}-eks-vpc",
-    "kubernetes.io/cluster/${var.name}-cluster" = "shared"
+    Name                                        = "${var.name}-${var.environment}-eks-vpc",
+    "kubernetes.io/cluster/${var.name}-${var.environment}-cluster" = "shared"
   }
 }
 
@@ -20,9 +20,9 @@ resource "aws_subnet" "public" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
-    Name                                           = "${var.name}-public-sg"
-    "kubernetes.io/cluster/${var.name}-cluster" = "shared"
-    "kubernetes.io/role/elb"                       = 1
+    Name                                        = "${var.name}-${var.environment}-public-sg"
+    "kubernetes.io/cluster/${var.name}-${var.environment}-cluster" = "shared"
+    "kubernetes.io/role/elb"                    = 1
   }
 
   map_public_ip_on_launch = true
@@ -37,9 +37,9 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
-    Name                                           = "${var.name}-private-sg"
-    "kubernetes.io/cluster/${var.name}-cluster" = "shared"
-    "kubernetes.io/role/internal-elb"              = 1
+    Name                                        = "${var.name}-${var.environment}-private-sg"
+    "kubernetes.io/cluster/${var.name}-${var.environment}-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"           = 1
   }
 }
 
@@ -48,7 +48,7 @@ resource "aws_internet_gateway" "eks" {
   vpc_id = aws_vpc.eks.id
 
   tags = {
-    "Name" = "${var.name}-igw"
+    "Name" = "${var.name}-${var.environment}-igw"
   }
 
   depends_on = [aws_vpc.eks]
@@ -65,7 +65,7 @@ resource "aws_route_table" "main" {
   }
 
   tags = {
-    Name = "${var.name}-Default-rt"
+    Name = "${var.name}-${var.environment}-default-rt"
   }
 }
 
@@ -82,7 +82,7 @@ resource "aws_eip" "main" {
   vpc = true
 
   tags = {
-    Name = "${var.name}-ngw-ip"
+    Name = "${var.name}-${var.environment}-ngw-ip"
   }
 }
 
@@ -92,7 +92,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[0].id
 
   tags = {
-    Name = "${var.name}-ngw"
+    Name = "${var.name}-${var.environment}-ngw"
   }
 }
 
@@ -105,11 +105,11 @@ resource "aws_route" "main" {
 
 # Security group for public subnet
 resource "aws_security_group" "public_sg" {
-  name   =  "${var.name}-Public-sg"
+  name   = "${var.name}-${var.environment}-public-sg"
   vpc_id = aws_vpc.eks.id
 
   tags = {
-    Name = "${var.name}-Public-sg"
+    Name = "${var.name}-${var.environment}-public-sg"
   }
 }
 
@@ -143,11 +143,11 @@ resource "aws_security_group_rule" "sg_egress_public" {
 
 # Security group for data plane
 resource "aws_security_group" "data_plane_sg" {
-  name   =  "${var.name}-Worker-sg"
+  name   = "${var.name}-${var.environment}-Worker-sg"
   vpc_id = aws_vpc.eks.id
 
   tags = {
-    Name = "${var.name}-Worker-sg"
+    Name = "${var.name}-${var.environment}-Worker-sg"
   }
 }
 
@@ -183,11 +183,11 @@ resource "aws_security_group_rule" "node_outbound" {
 
 # Security group for control plane
 resource "aws_security_group" "control_plane_sg" {
-  name   = "${var.name}-ControlPlane-sg"
+  name   = "${var.name}-${var.environment}-ControlPlane-sg"
   vpc_id = aws_vpc.eks.id
 
   tags = {
-    Name = "${var.name}-ControlPlane-sg"
+    Name = "${var.name}-${var.environment}-ControlPlane-sg"
   }
 }
 

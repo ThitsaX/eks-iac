@@ -2,13 +2,18 @@ variable "name" {
   description = "name of your infra"
   type = string
 }
-
+variable "environment" {
+  description = "name for your environment"
+  type= string
+}
 variable "region" {
   description = "AWS region"
   type        = string
 }
-
-
+variable "domain" {
+  description = "domain for whole cluster"
+  type = string
+}
 variable "profile" {
   description = "AWS profile name as set in the shared credentials file"
   type        = string

@@ -1,113 +1,85 @@
-# EKS Cluster
-resource "aws_eks_cluster" "eks" {
-  name     = "${var.name}-cluster"
-  role_arn = aws_iam_role.cluster.arn
-  version  = "${var.k8s_version}"
-  
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 19.0"
 
-  vpc_config {
-    # security_group_ids      = [aws_security_group.eks_cluster.id, aws_security_group.eks_nodes.id]
-    subnet_ids              = flatten([aws_subnet.public[*].id, aws_subnet.private[*].id])
-    endpoint_private_access = true
-    endpoint_public_access  = true
-    public_access_cidrs     = ["0.0.0.0/0"]
+  cluster_name                   = "${var.name}-${var.environment}-cluster"
+  cluster_version                = var.k8s_version
+  cluster_endpoint_public_access = true
+  create_cloudwatch_log_group = false
+  cluster_addons = {
+    coredns = {
+      most_recent = true
+    }
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent    = true
+      before_compute = true
+      configuration_values = jsonencode({
+        env = {
+          # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
+          ENABLE_PREFIX_DELEGATION = "true"
+          WARM_PREFIX_TARGET       = "1"
+        }
+      })
+    }
   }
 
-  tags = merge(
-    var.tags
-  )
+  vpc_id                   = aws_vpc.eks.id
+  subnet_ids               = aws_subnet.private[*].id
+  control_plane_subnet_ids = flatten([aws_subnet.public[*].id, aws_subnet.private[*].id])
 
-  depends_on = [
-    aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy
-  ]
-}
+  #EKS Managed Node Group(s)
+  eks_managed_node_group_defaults = {
+    instance_types       = ["t2.medium", "t2.large"]
+    bootstrap_extra_args = "--container-runtime containerd --kubelet-extra-args '--max-pods=110'"
+  }
 
-
-# EKS Cluster IAM Role
-resource "aws_iam_role" "cluster" {
-  name = "${var.name}-Cluster-Role"
-
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
+  eks_managed_node_groups = {
+    "${var.name}-${var.environment}-ng-1" = {
+      min_size       = var.node_gp_one_min_size
+      max_size       = var.node_gp_one_max_size
+      desired_size   = var.node_gp_one_desire_size
+      instance_types = ["${var.node_gp_one_instance_type}"]
+      capacity_type  = var.node_gp_capacity_type
+    },
+    "${var.name}-${var.environment}-ng-2" = {
+      min_size       = var.node_gp_two_min_size
+      max_size       = var.node_gp_two_max_size
+      desired_size   = var.node_gp_two_desire_size
+      instance_types = ["${var.node_gp_two_instance_type}"]
+      capacity_type  = var.node_gp_capacity_type
+    },
+    "${var.name}-${var.environment}-ng-3" = {
+      min_size       = var.node_gp_three_min_size
+      max_size       = var.node_gp_three_max_size
+      desired_size   = var.node_gp_three_desire_size
+      instance_types = ["${var.node_gp_three_instance_type}"]
+      capacity_type  = var.node_gp_capacity_type
     }
-  ]
-}
-POLICY
-}
-
-resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.cluster.name
-}
-
-
-# EKS Cluster Security Group
-resource "aws_security_group" "eks_cluster" {
-  name        = "${var.name}-cluster-sg"
-  description = "Cluster communication with worker nodes"
-  vpc_id      = aws_vpc.eks.id
+  }
 
   tags = {
-    Name = "${var.name}-cluster-sg"
+    Environment = "dev"
+    Terraform   = "true"
   }
 }
 
-resource "aws_security_group_rule" "cluster_inbound" {
-  description              = "Allow worker nodes to communicate with the cluster API Server"
-  from_port                = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.eks_cluster.id
-  source_security_group_id = aws_security_group.eks_nodes.id
-  to_port                  = 443
-  type                     = "ingress"
-}
-
-resource "aws_security_group_rule" "cluster_outbound" {
-  description              = "Allow cluster API Server to communicate with the worker nodes"
-  from_port                = 1024
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.eks_cluster.id
-  source_security_group_id = aws_security_group.eks_nodes.id
-  to_port                  = 65535
-  type                     = "egress"
-}
-
-resource "time_sleep" "wait_2_min" {
-  depends_on = [aws_eks_node_group.ng2]
-  create_duration = "30s"
-}
-
-
-# module "eks-kubeconfig" {
-#   source     = "hyperbadger/eks-kubeconfig/aws"
-#   version    = "1.0.0"
-
-#   depends_on = [aws_eks_cluster.eks]
-#   cluster_id =  aws_eks_cluster.eks.id
-#   }
-
 data "aws_eks_cluster_auth" "cluster" {
-  depends_on = [ aws_eks_node_group.ng1 ]
-  name = aws_eks_cluster.eks.name
+  depends_on = [module.eks]
+  name       = module.eks.cluster_name
 }
 
 locals {
-  depends_on = [ data.aws_eks_cluster_auth.cluster ]
+  depends_on = [data.aws_eks_cluster_auth.cluster]
   kubeconfig = templatefile("templates/kubeconfig.tpl", {
-    cluster_name                      = aws_eks_cluster.eks.name
-    cluster_endpoint                  = aws_eks_cluster.eks.endpoint
-    cluster_ca_certificate            = aws_eks_cluster.eks.certificate_authority[0].data
-    cluster_token                     = data.aws_eks_cluster_auth.cluster.token
-})
-  }
+    cluster_name           = module.eks.cluster_name
+    cluster_endpoint       = module.eks.cluster_endpoint
+    cluster_ca_certificate = module.eks.cluster_certificate_authority_data
+    cluster_token          = data.aws_eks_cluster_auth.cluster.token
+  })
+}
 
 resource "local_file" "kubeconfig" {
   content  = local.kubeconfig

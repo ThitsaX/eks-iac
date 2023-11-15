@@ -1,5 +1,5 @@
 locals {
-  backend_name = "${var.name}"
+  backend_name = "${var.name}-${var.environment}"
   region_name = "${var.region}"
 }
 terraform {

@@ -9,7 +9,8 @@ resource "helm_release" "argocd" {
   create_namespace = true
   depends_on = [ helm_release.longhorn, helm_release.nginx-ext-ingress-controller ]
   values     = [templatefile("templates/values-argocd.yaml.tpl", {
-    ingress_ext_name = "nginx-int"
+    ingress_ext_name = "nginx-ext"
+    host = "argocd.${var.environment}.${var.name}.${var.domain}"
   })
   ]
 }

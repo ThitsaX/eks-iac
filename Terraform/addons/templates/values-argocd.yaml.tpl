@@ -1730,7 +1730,7 @@ server:
 
     ## When the ingress is enabled, a host pointing to this will be created
     ##
-    hostname: argocd-dev.vnext.wynepayhub-pre.io
+    hostname: ${host}
 
     ## The Path to Argo CD server. You may need to set this to '/*' in order to use this
     ## with ALB ingress controllers.
