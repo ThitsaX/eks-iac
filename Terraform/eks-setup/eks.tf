@@ -34,6 +34,7 @@ module "eks" {
   eks_managed_node_group_defaults = {
     instance_types       = ["t2.medium", "t2.large"]
     bootstrap_extra_args = "--container-runtime containerd --kubelet-extra-args '--max-pods=110'"
+    disk_size = var.disk_size
   }
 
   eks_managed_node_groups = {
@@ -43,6 +44,19 @@ module "eks" {
       desired_size   = var.node_gp_one_desire_size
       instance_types = ["${var.node_gp_one_instance_type}"]
       capacity_type  = var.node_gp_capacity_type
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_size           = var.disk_size
+            volume_type           = "gp3"
+            iops                  = 3000
+            throughput            = 150
+            encrypted             = true
+            delete_on_termination = true
+          }
+        }
+      }
     },
     "${var.name}-${var.environment}-ng-2" = {
       min_size       = var.node_gp_two_min_size
@@ -50,6 +64,19 @@ module "eks" {
       desired_size   = var.node_gp_two_desire_size
       instance_types = ["${var.node_gp_two_instance_type}"]
       capacity_type  = var.node_gp_capacity_type
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_size           = var.disk_size
+            volume_type           = "gp3"
+            iops                  = 3000
+            throughput            = 150
+            encrypted             = true
+            delete_on_termination = true
+          }
+        }
+      }
     },
     "${var.name}-${var.environment}-ng-3" = {
       min_size       = var.node_gp_three_min_size
@@ -57,6 +84,19 @@ module "eks" {
       desired_size   = var.node_gp_three_desire_size
       instance_types = ["${var.node_gp_three_instance_type}"]
       capacity_type  = var.node_gp_capacity_type
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_size           = var.disk_size
+            volume_type           = "gp3"
+            iops                  = 3000
+            throughput            = 150
+            encrypted             = true
+            delete_on_termination = true
+          }
+        }
+      }
     }
   }
 
