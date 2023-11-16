@@ -12,17 +12,17 @@ k8s_version = 1.28
 node_gp_one_min_size = 1
 node_gp_one_max_size = 2
 node_gp_one_desire_size = 1
-node_gp_one_instance_type = "t2.xlarge"
+node_gp_one_instance_type = "t2.large"
 
 node_gp_two_min_size = 1
 node_gp_two_max_size = 2
 node_gp_two_desire_size = 1
-node_gp_two_instance_type = "t2.xlarge"
+node_gp_two_instance_type = "t2.large"
 
 node_gp_three_min_size = 1
 node_gp_three_max_size = 2
 node_gp_three_desire_size = 1
-node_gp_three_instance_type = "t2.xlarge"
+node_gp_three_instance_type = "t2.large"
 
 
 node_gp_capacity_type = "ON_DEMAND"
