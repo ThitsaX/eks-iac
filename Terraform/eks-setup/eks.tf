@@ -101,7 +101,7 @@ module "eks" {
   }
 
   tags = {
-    Environment = "dev"
+    Environment = "${var.environment}"
     Terraform   = "true"
   }
 }
