@@ -1,6 +1,6 @@
 region         = "ap-southeast-1"
-bucket         = "pph-testing-state"
-dynamodb_table = "pph-testing-lock"
+bucket         = "pph-testing-vnext-state"
+dynamodb_table = "pph-testing-vnext-lock"
 profile        = ""
 role_arn       = ""
 encrypt        = "true"

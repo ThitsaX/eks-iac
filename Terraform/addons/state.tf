@@ -1,5 +1,5 @@
 locals {
-  backend_name = "${var.name}-${var.environment}"
+  backend_name = "${var.name}-${var.environment}-vnext"
   region_name = "${var.region}"
 }
 terraform {
