@@ -27,7 +27,9 @@ terraform plan --var-file=../env.hcl
 ```shell
 terraform apply --var-file=../env.hcl
 ```
-
+### Setp 4 ( Deploy Addon Services)
+1
+```bash
 cd addons
 ```
 ```shell
