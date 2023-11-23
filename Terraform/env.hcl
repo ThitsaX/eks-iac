@@ -1,7 +1,7 @@
-name= "pph"
-environment = "testing"
-region= "ap-southeast-1"
-domain= "vnext.wynepayhub-pre.io"
+name= "vnext-cluster1"
+environment = "vnext-beta"
+region= "eu-west-3"
+domain= "mojaloop-vnext.io"
 vpc_cidr = "10.0.0.0/16"
 enable_dns_hostname = true
 enable_dns_support = true
