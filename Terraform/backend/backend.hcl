@@ -1,6 +1,0 @@
-region         = "eu-west-3"
-bucket         = "vnext-beta-vnext-state"
-dynamodb_table = "vnext-beta-vnext-lock"
-profile        = ""
-role_arn       = ""
-encrypt        = "true"
