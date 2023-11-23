@@ -8,7 +8,7 @@ terraform {
   }
 }
 
-resource "aws_s3_bucket_object" "kubeconfig" {
+resource "aws_s3_object" "kubeconfig" {
   depends_on             = [local_file.kubeconfig]
   bucket                 = "${local.backend_name}-state"
   key                    = "kubeconfig"

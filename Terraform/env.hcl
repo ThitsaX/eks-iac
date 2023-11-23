@@ -1,5 +1,5 @@
-name= "vnext-cluster1"
-environment = "vnext-beta"
+name= "vnext"
+environment = "beta"
 region= "eu-west-3"
 domain= "mojaloop-vnext.io"
 vpc_cidr = "10.0.0.0/16"
