@@ -30,3 +30,5 @@ disk_size = 100
 
 ingress_ext_name = "nginx_ext"
 helm_external_dns_version = "6.7.2"
+
+iam_admin_group = "admin"

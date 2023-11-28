@@ -1,3 +1,15 @@
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    # This requires the awscli to be installed locally where Terraform is executed
+    args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+  }
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0"
@@ -5,7 +17,7 @@ module "eks" {
   cluster_name                   = "${var.name}-${var.environment}-cluster"
   cluster_version                = var.k8s_version
   cluster_endpoint_public_access = true
-  create_cloudwatch_log_group = false
+  create_cloudwatch_log_group    = false
   cluster_addons = {
     coredns = {
       most_recent = true
@@ -34,7 +46,7 @@ module "eks" {
   eks_managed_node_group_defaults = {
     instance_types       = ["t2.medium", "t2.large"]
     bootstrap_extra_args = "--container-runtime containerd --kubelet-extra-args '--max-pods=110'"
-    disk_size = var.disk_size
+    disk_size            = var.disk_size
   }
 
   eks_managed_node_groups = {
@@ -99,11 +111,29 @@ module "eks" {
       }
     }
   }
+  # create_aws_auth_configmap = false
+  manage_aws_auth_configmap = true
+
+
+  aws_auth_users = concat(
+    [for users in data.aws_iam_group.admin_group.users : {
+      userarn  = "${users.arn}"
+      username = "${users.user_name}"
+      groups   = ["system:masters"]
+      }
+    ]
+  )
+
+
 
   tags = {
     Environment = "${var.environment}"
     Terraform   = "true"
   }
+}
+
+data "aws_iam_group" "admin_group" {
+  group_name = var.iam_admin_group
 }
 
 data "aws_eks_cluster_auth" "cluster" {

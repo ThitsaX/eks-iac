@@ -142,3 +142,8 @@ variable "disk_size" {
   type        = number
   default     = 20
 }
+
+variable "iam_admin_group" {
+  description = "eks admin iam group name"
+  type        = string
+}
