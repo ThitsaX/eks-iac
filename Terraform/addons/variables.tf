@@ -1,10 +1,10 @@
 variable "name" {
   description = "name of your infra"
-  type = string
+  type        = string
 }
 variable "environment" {
   description = "name for your environment"
-  type= string
+  type        = string
 }
 variable "region" {
   description = "AWS region"
@@ -12,7 +12,7 @@ variable "region" {
 }
 variable "domain" {
   description = "domain for whole cluster"
-  type = string
+  type        = string
 }
 
 variable "enable_dns_hostname" {
@@ -61,31 +61,31 @@ variable "instance_type" {
 }
 variable "k8s_version" {
   description = "K8s version"
-  type = string
-  default = "1.26"
+  type        = string
+  default     = "1.26"
 }
 variable "ng_desired_size" {
   description = "node group desire size"
-  type = number
-  default = 2
+  type        = number
+  default     = 2
 }
 
 variable "ng_min_size" {
   description = "node group min size"
-  type = number
-  default = 1
+  type        = number
+  default     = 1
 }
 
 variable "ng_max_size" {
   description = "node group max size"
-  type = number
-  default= 5
+  type        = number
+  default     = 5
 }
 
 variable "disk_size" {
   description = "worker node disk size"
-  type = number
-  default = 20
+  type        = number
+  default     = 20
 }
 variable "helm_external_dns_version" {
   description = "helm external dns version"
@@ -98,5 +98,19 @@ variable "external_dns_namespace" {
 }
 variable "ingress_ext_name" {
   description = "ingress ext name"
-  type = string
+  type        = string
+}
+
+variable "helm_certmanager_version" {
+  description = "Helm Cert Manager Version"
+  type        = string
+}
+variable "letsencrypt_admin_email" {
+  description = "Let's Encrypt admin email for cluster issuer"
+  type        = string
+}
+variable "letsencrypt_server" {
+  description = "production le server or staging"
+  type        = string
+  default     = "production"
 }

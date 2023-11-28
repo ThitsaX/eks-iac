@@ -1,17 +1,17 @@
 resource "helm_release" "external-dns" {
-  name       = "external-dns"
-  repository = "https://charts.bitnami.com/bitnami"
-  chart      = "external-dns"
-  version    = var.helm_external_dns_version
-  namespace  = var.external_dns_namespace
-  timeout    = 300
+  name             = "external-dns"
+  repository       = "https://charts.bitnami.com/bitnami"
+  chart            = "external-dns"
+  version          = var.helm_external_dns_version
+  namespace        = var.external_dns_namespace
+  timeout          = 300
   create_namespace = true
   values = [
     templatefile("${path.module}/templates/values-external-dns.yaml.tpl", {
-        external_dns_iam_access_key = aws_iam_access_key.route53-external-dns.id
-        external_dns_iam_secret_key = aws_iam_access_key.route53-external-dns.secret
-        region = var.region
-      })
+      external_dns_iam_access_key = aws_iam_access_key.route53-external-dns.id
+      external_dns_iam_secret_key = aws_iam_access_key.route53-external-dns.secret
+      region                      = var.region
+    })
   ]
 }
 

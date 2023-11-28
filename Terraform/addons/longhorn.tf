@@ -12,22 +12,22 @@ resource "kubernetes_annotations" "disable-default-storageclass" {
 }
 
 resource "helm_release" "longhorn" {
-  name       = "longhorn"
-  repository = "https://charts.longhorn.io"
-  chart      = "longhorn"
-  version    = "1.4.2"
-  namespace  = "longhorn-system"
-  wait       = false
+  name             = "longhorn"
+  repository       = "https://charts.longhorn.io"
+  chart            = "longhorn"
+  version          = "1.4.2"
+  namespace        = "longhorn-system"
+  wait             = false
   create_namespace = true
-  depends_on = [ kubectl_manifest.longhorn_init ]
+  depends_on       = [kubectl_manifest.longhorn_init]
   values = [
     "${file("./templates/values-longhorn.yaml")}"
   ]
 }
 
 resource "kubectl_manifest" "longhorn_system" {
-  depends_on = [  kubernetes_annotations.disable-default-storageclass ]
-  yaml_body= <<YAML
+  depends_on = [kubernetes_annotations.disable-default-storageclass]
+  yaml_body  = <<YAML
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -41,8 +41,8 @@ spec:
 YAML
 }
 resource "kubectl_manifest" "longhorn_init" {
-  depends_on = [ kubectl_manifest.longhorn_system ]
-  yaml_body = <<YAML
+  depends_on = [kubectl_manifest.longhorn_system]
+  yaml_body  = <<YAML
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:

@@ -32,3 +32,7 @@ ingress_ext_name = "nginx_ext"
 helm_external_dns_version = "6.7.2"
 
 iam_admin_group = "admin"
+
+helm_certmanager_version = "v1.13.2"
+letsencrypt_admin_email = "pyaephyo.hein@thitsaworks.com"
+letsencrypt_server = "production"

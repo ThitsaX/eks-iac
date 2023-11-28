@@ -1,10 +1,10 @@
 locals {
   backend_name = "${var.name}-${var.environment}-vnext"
-  region_name = "${var.region}"
+  region_name  = var.region
 }
 terraform {
-  backend "s3"{
-    key = "addons.tfstate"
+  backend "s3" {
+    key    = "addons.tfstate"
     bucket = "${local.backend_name}-state"
   }
 }

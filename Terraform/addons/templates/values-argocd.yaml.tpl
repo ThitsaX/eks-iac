@@ -1743,22 +1743,22 @@ server:
     ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
     ##
     ## e.g:
-    ## annotations:
-    ##   kubernetes.io/ingress.class: nginx
-    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    annotations:
+      kubernetes.io/ingress.class: ${ingress_ext_name}
+      cert-manager.io/cluster-issuer: letsencrypt
     ##
-    annotations: {}
+    ## annotations: {}
 
     ## Enable TLS configuration for the hostname defined at ingress.hostname parameter
     ## TLS certificates will be retrieved from a TLS secret with name: {{- printf "%s-tls" .Values.ingress.hostname }}
     ## You can use the ingress.secrets parameter to create this TLS secret or rely on cert-manager to create it
     ##
-    tls: false
+    tls: true
 
     ## The list of additional hostnames to be covered with this ingress record.
     ## Most likely the hostname above will be enough, but in the event more hosts are needed, this is an array
     extraHosts: []
-    ## - name: argocd.server.local
+    ##  - name: argocd.server.local
     ##   path: /
     ##
 
@@ -1773,10 +1773,10 @@ server:
 
     ## The tls configuration for additional hostnames to be covered with this ingress record.
     ## see: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
-    extraTls: []
-    ## - hosts:
-    ##     - argocd.server.local
-    ##   secretName: argocd.server.local-tls
+    extraTls:
+      - hosts:
+        - ${host}
+        secretName: argocd-server-tls
     ##
 
     ## If you're providing your own certificates, please use this to add the certificates as secrets
