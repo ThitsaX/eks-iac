@@ -65,6 +65,9 @@ variable "node_gp_count" {
   type        = number
   default     = 1
 }
+
+// Node Group 1
+
 variable "node_gp_one_min_size" {
   description = "number of minimal instance for node group"
   type        = number

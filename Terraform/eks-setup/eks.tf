@@ -62,8 +62,8 @@ module "eks" {
           ebs = {
             volume_size           = var.disk_size
             volume_type           = "gp3"
-            iops                  = 3000
-            throughput            = 150
+            iops                  = 16000
+            throughput            = 1000
             encrypted             = true
             delete_on_termination = true
           }
@@ -82,8 +82,8 @@ module "eks" {
           ebs = {
             volume_size           = var.disk_size
             volume_type           = "gp3"
-            iops                  = 3000
-            throughput            = 150
+            iops                  = 16000
+            throughput            = 1000
             encrypted             = true
             delete_on_termination = true
           }
@@ -102,8 +102,8 @@ module "eks" {
           ebs = {
             volume_size           = var.disk_size
             volume_type           = "gp3"
-            iops                  = 3000
-            throughput            = 150
+            iops                  = 16000
+            throughput            = 1000
             encrypted             = true
             delete_on_termination = true
           }
