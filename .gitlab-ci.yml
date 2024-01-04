@@ -83,7 +83,8 @@ apply EKS infra:
     - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
     - terraform init --backend-config=./backend.hcl
     - terraform apply --var-file=../env.hcl --auto-approve
-    - aws eks update-kubeconfig --region ${AWS_REGION}
+    - terraform output cluster_name
+    - aws eks update-kubeconfig --region ${AWS_REGION} --name $(terraform output cluster_name)
     - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig
   dependencies:
     - plan EKS infra
