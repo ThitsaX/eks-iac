@@ -25,14 +25,14 @@ validate:
 plan backend:
   stage: plan
   script:
-    - cd backend/
+    - cd Terraform/backend/
     - terraform init
     - terraform plan --var-file=../env.hcl
   when: manual
 plan update backend:
   stage: plan
   script:
-    - cd backend/
+    - cd Terraform/backend/
     - aws s3 cp s3://${BUCKET_NAME}/backend.tfstate . --sse AES256
     - mv backend.tfstate terraform.tfstate
     - terraform init
@@ -43,7 +43,7 @@ plan update backend:
 plan EKS infra:
   stage: plan
   script:
-    - cd infra/
+    - cd Terraform/eks-setup/
     - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
     - terraform init --backend-config=./backend.hcl
     - terraform plan --var-file=../env.hcl
