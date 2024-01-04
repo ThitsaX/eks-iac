@@ -1,0 +1,112 @@
+stages:
+  - validate
+  - plan
+  - apply
+  - destroy
+image:
+  name: hashicorp/terraform:1.5.5
+  entrypoint:
+    - '/usr/bin/env'
+    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+before_script:
+  - export AWS_ACCESS_KEY=${AWS_ACCESS_KEY_ID}
+  - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  - export AWS_DEFAULT_REGION=${AWS_REGION}
+  - rm -rf .terraform
+  - terraform --version
+  - apk --no-cache add python3 py3-pip
+  - pip3 install --upgrade pip
+  - pip3 install --no-cache-dir awscli
+validate:
+  stage: validate
+  script:
+    - terraform validate
+  when: manual
+plan backend:
+  stage: plan
+  script:
+    - cd backend/
+    - terraform init
+    - terraform plan --var-file=../env.hcl
+  when: manual
+plan update backend:
+  stage: plan
+  script:
+    - cd backend/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.tfstate . --sse AES256
+    - mv backend.tfstate terraform.tfstate
+    - terraform init
+    - terraform plan --var-file=../env.hcl
+  dependencies:
+    - validate
+  when: manual
+plan infra:
+  stage: plan
+  script:
+    - cd infra/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
+    - terraform init --backend-config=./backend.hcl
+    - terraform plan --var-file=../env.hcl
+  dependencies:
+    - validate
+  when: manual  
+apply backend:
+  stage: apply
+  script:
+    - cd Terraform/backend/
+    - terraform init
+    - terraform apply --var-file=../env.hcl --auto-approve
+    - mv terraform.tfstate backend.tfstate
+    - aws s3 cp backend.tfstate s3://${BUCKET_NAME} --sse AES256
+    - aws s3 cp backend.hcl s3://${BUCKET_NAME} --sse AES256
+  dependencies:
+    - plan backend
+  when: manual
+apply update backend:
+  stage: apply
+  script:
+    - cd Terraform/backend/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.tfstate . --sse AES256
+    - mv backend.tfstate terraform.tfstate
+    - terraform init
+    - terraform plan --var-file=../env.hcl
+    - aws s3 rm s3://${BUCKET_NAME}/backend.tfstate 
+    - mv terraform.tfstate backend.tfstate
+    - aws s3 cp backend.tfstate s3://${BUCKET_NAME} --sse AES256
+  dependencies:
+    - validate
+  when: manual  
+apply EKS infra:
+  stage: apply
+  script:
+    - cd Terraform/eks-setup/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
+    - terraform init --backend-config=./backend.hcl
+    - terraform apply --var-file=../env.hcl --auto-approve
+    - aws eks update-kubeconfig --region ${AWS_REGION}
+    - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig
+  dependencies:
+    - apply backend
+    - plan infra
+  when: manual
+destroy backend:
+  stage: destroy
+  script:
+    - cd Terraform/backend/
+    - terraform init
+    - aws s3 cp s3://${BUCKET_NAME}/backend.tfstate . --sse AES256
+    - mv backend.tfstate terraform.tfstate
+    - terraform destroy --var-file=../env.hcl --auto-approve
+  dependencies:
+    - apply backend
+  when: manual
+destroy eks infra:
+  stage: Terraform/destroy/
+  script:
+    - cd infra/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
+    - terraform init --backend-config=./backend.hcl
+    - terraform destroy --var-file=../env.hcl --auto-approve
+  dependencies:
+    - apply infra
+  when: manual
