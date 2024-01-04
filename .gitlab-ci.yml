@@ -84,7 +84,7 @@ apply EKS infra:
     - terraform init --backend-config=./backend.hcl
     - terraform apply --var-file=../env.hcl --auto-approve
     - terraform output cluster_name
-    - aws eks update-kubeconfig --region ${AWS_REGION} --name $(terraform output cluster_name)
+    - aws eks update-kubeconfig --region ${AWS_REGION} --name $(terraform output cluster_name | tr -d '"')
     - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig
   dependencies:
     - plan EKS infra
