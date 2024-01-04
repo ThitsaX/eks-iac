@@ -40,7 +40,7 @@ plan update backend:
   dependencies:
     - validate
   when: manual
-plan infra:
+plan EKS infra:
   stage: plan
   script:
     - cd infra/
