@@ -86,8 +86,7 @@ apply EKS infra:
     - aws eks update-kubeconfig --region ${AWS_REGION}
     - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig
   dependencies:
-    - apply backend
-    - plan infra
+    - plan EKS infra
   when: manual
 destroy backend:
   stage: destroy
@@ -97,8 +96,6 @@ destroy backend:
     - aws s3 cp s3://${BUCKET_NAME}/backend.tfstate . --sse AES256
     - mv backend.tfstate terraform.tfstate
     - terraform destroy --var-file=../env.hcl --auto-approve
-  dependencies:
-    - apply backend
   when: manual
 destroy eks infra:
   stage: destroy
@@ -107,6 +104,4 @@ destroy eks infra:
     - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
     - terraform init --backend-config=./backend.hcl
     - terraform destroy --var-file=../env.hcl --auto-approve
-  dependencies:
-    - apply infra
   when: manual
