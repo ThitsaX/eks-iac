@@ -183,6 +183,12 @@ resource "aws_security_group" "allow_nfs" {
 
 resource "aws_efs_file_system" "stw_node_efs" {
   creation_token = "efs-${var.name}-${var.environment}-cluster-token"
+  tags = {
+    Environment = "${var.environment}"
+    Terraform   = "true"
+    Name = "efs-${var.name}-${var.environment}-cluster"
+  }
+  
 }
 
 resource "aws_efs_mount_target" "stw_node_efs_mt" {
