@@ -166,7 +166,7 @@ resource "aws_security_group" "allow_nfs" {
     description = "NFS from VPC"
     from_port   = 0
     to_port     = 0
-    protocol    = "tcp"
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -207,7 +207,7 @@ resource "aws_efs_file_system" "stw_node_efs" {
 resource "aws_efs_mount_target" "stw_node_efs_mt" {
   count = var.availability_zones_count
   file_system_id  = aws_efs_file_system.stw_node_efs.id
-  subnet_id       = aws_subnet.public[count.index].id
+  subnet_id       = aws_subnet.private[count.index].id
   security_groups = [aws_security_group.allow_nfs.id]
 }
 
