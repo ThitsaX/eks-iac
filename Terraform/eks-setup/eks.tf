@@ -164,10 +164,10 @@ resource "aws_security_group" "allow_nfs" {
 
   ingress {
     description = "NFS from VPC"
-    from_port   = 2049
-    to_port     = 2049
+    from_port   = 0
+    to_port     = 0
     protocol    = "tcp"
-    cidr_blocks = flatten([cidrsubnet(var.vpc_cidr, var.subnet_cidr_bits, 2), cidrsubnet(var.vpc_cidr, var.subnet_cidr_bits, 3)])
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -250,7 +250,7 @@ locals {
   })
 }
 
-resource "local_file" "kubeconfig" {
-  content  = local.kubeconfig
-  filename = "../kubeconfig"
-}
+# resource "local_file" "kubeconfig" {
+#   content  = local.kubeconfig
+#   filename = "../kubeconfig"
+# }

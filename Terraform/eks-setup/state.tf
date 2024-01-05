@@ -8,11 +8,11 @@ terraform {
   }
 }
 
-resource "aws_s3_bucket_object" "kubeconfig" {
-  depends_on             = [local_file.kubeconfig]
-  bucket                 = "${local.backend_name}-state"
-  key                    = "kubeconfig"
-  acl                    = "private" # or can be "public-read"
-  source                 = "../kubeconfig"
-  server_side_encryption = "AES256"
-}
+# resource "aws_s3_bucket_object" "kubeconfig" {
+#   depends_on             = [local_file.kubeconfig]
+#   bucket                 = "${local.backend_name}-state"
+#   key                    = "kubeconfig"
+#   acl                    = "private" # or can be "public-read"
+#   source                 = "../kubeconfig"
+#   server_side_encryption = "AES256"
+# }
