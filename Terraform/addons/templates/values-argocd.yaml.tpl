@@ -14,7 +14,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: longhorn
+  storageClass: efs-sc
 
 ## @section Common parameters
 
