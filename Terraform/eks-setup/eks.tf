@@ -180,7 +180,20 @@ resource "aws_security_group" "allow_nfs" {
 
 }
 
+resource "kubernetes_storage_class" "efs_sc" {
+  metadata {
+    name = "efs-sc"
+  }
+  storage_provisioner = "efs.csi.aws.com"
+  reclaim_policy      = "Retain"
+  parameters = {
+    type = "pd-standard",
+    provisioningMode = "efs-ap",
+    fileSystemId = aws_efs_file_system.stw_node_efs.id,
+    directoryPerms: "700" 
 
+  }
+}
 resource "aws_efs_file_system" "stw_node_efs" {
   creation_token = "efs-${var.name}-${var.environment}-cluster-token"
   tags = {
