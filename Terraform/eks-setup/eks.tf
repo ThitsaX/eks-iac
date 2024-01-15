@@ -280,7 +280,7 @@ resource "aws_docdb_cluster_instance" "cluster_instances" {
 resource "aws_docdb_cluster" "default" {
   cluster_identifier = "${module.eks.cluster_name}-document-db"
   availability_zones = data.aws_availability_zones.available.names
-  master_username    = "mongo-admin"
+  master_username    = "mongoadmin"
   master_password    = "mongo-P@ssw0rd"
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
 }
