@@ -254,3 +254,34 @@ locals {
 #   content  = local.kubeconfig
 #   filename = "../kubeconfig"
 # }
+
+
+### Document DB ( Mongo-DB )
+
+resource "aws_db_subnet_group" "db_subnet_group" {
+
+  // The name and description of the db subnet group
+  name        = "${module.eks.cluster_name}-db-subnet-gp"
+  description = "DB subnet group"
+  
+  // Since the db subnet group requires 2 or more subnets, we are going to
+  // loop through our private subnets in "rds_test_private_subnet" and
+  // add them to this db subnet group
+  subnet_ids  = aws_subnet.public[*].id
+}
+
+resource "aws_docdb_cluster_instance" "cluster_instances" {
+  count              = 2
+  identifier         = "${module.eks.cluster_name}-document-db"
+  cluster_identifier = aws_docdb_cluster.default.id
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  instance_class     = "db.r5.large"
+}
+
+resource "aws_docdb_cluster" "default" {
+  cluster_identifier = "${module.eks.cluster_name}-document-db"
+  availability_zones = data.aws_availability_zones.available.names
+  master_username    = "admin"
+  master_password    = "admin"
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+}
