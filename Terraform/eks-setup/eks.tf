@@ -274,7 +274,6 @@ resource "aws_docdb_cluster_instance" "cluster_instances" {
   count              = 2
   identifier         = "${module.eks.cluster_name}-document-db"
   cluster_identifier = aws_docdb_cluster.default.id
-  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
   instance_class     = "db.r5.large"
 }
 
