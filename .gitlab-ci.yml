@@ -49,7 +49,17 @@ plan EKS infra:
     - terraform plan --var-file=../env.hcl
   dependencies:
     - validate
-  when: manual  
+  when: manual
+plan Addons Services:
+  stage: plan
+  script:
+    - cd Terraform/addons/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
+    - terraform init --backend-config=./backend.hcl
+    - terraform plan --var-file=../env.hcl
+  dependencies:
+    - validate
+  when: manual 
 apply backend:
   stage: apply
   script:
@@ -88,6 +98,17 @@ apply EKS infra:
     - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig  --sse AES256
   dependencies:
     - plan EKS infra
+  when: manual
+apply Addon Services:
+  stage: apply
+  script:
+    - cd Terraform/addons/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
+    - terraform init --backend-config=./backend.hcl
+    - terraform apply --var-file=../env.hcl --auto-approve
+    - terraform output cluster_name
+  dependencies:
+    - apply EKS infra
   when: manual
 destroy backend:
   stage: destroy
