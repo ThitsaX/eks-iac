@@ -134,7 +134,13 @@ variable "node_gp_three_instance_type" {
   default     = "t2.medium"
 }
 
-
+variable "docdb_cluster_names" {
+  description = "Document DB instance names"
+  type = list(string)
+}
+variable "docdb_size" {
+  type = string
+}
 variable "node_gp_capacity_type" {
   description = "Instance capacity type in node group"
   type        = string

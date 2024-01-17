@@ -24,6 +24,8 @@ node_gp_three_max_size = 2
 node_gp_three_desire_size = 1
 node_gp_three_instance_type = "t2.large"
 
+docdb_cluster_names= ["a","b"]
+docdb_size = 
 
 node_gp_capacity_type = "ON_DEMAND"
 disk_size = 100
