@@ -272,8 +272,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 
 resource "aws_docdb_cluster_instance" "cluster_instances" {
   count              = length(var.docdb_cluster_names)
-  identifier         = "${module.eks.cluster_name}-document-db-instance-${var.doc_cluster_names[count.index]}"
-  identifier         = "${module.eks.cluster_name}-document-db"
+  identifier         = "${module.eks.cluster_name}-document-db-instance-${var.docdb_cluster_names[count.index]}"
   cluster_identifier = aws_docdb_cluster.default.id
   instance_class     = var.docdb_size
 }
