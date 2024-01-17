@@ -127,3 +127,11 @@ destroy eks infra:
     - terraform init --backend-config=./backend.hcl
     - terraform destroy --var-file=../env.hcl --auto-approve
   when: manual
+destroy Addon services:
+  stage: destroy
+  script:
+    - cd Terraform/addons/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
+    - terraform init --backend-config=./backend.hcl
+    - terraform destroy --var-file=../env.hcl --auto-approve
+  when: manual
