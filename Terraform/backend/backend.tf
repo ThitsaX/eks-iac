@@ -92,7 +92,7 @@ resource "aws_s3_bucket" "default" {
   }
 
   tags = {
-    
+
   }
 }
 
@@ -130,7 +130,7 @@ resource "aws_dynamodb_table" "with_server_side_encryption" {
   }
 
   tags = {
-    Name   = "${var.name}-encrypted"
+    Name = "${var.name}-encrypted"
   }
 }
 
@@ -156,7 +156,7 @@ resource "aws_dynamodb_table" "without_server_side_encryption" {
   }
 
   tags = {
-    Name   = "${var.name}-unencrypted"
+    Name = "${var.name}-unencrypted"
   }
 }
 

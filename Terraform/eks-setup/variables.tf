@@ -136,7 +136,7 @@ variable "node_gp_three_instance_type" {
 
 variable "docdb_cluster_names" {
   description = "Document DB instance names"
-  type = list(string)
+  type        = list(string)
 }
 variable "docdb_size" {
   type = string

@@ -187,10 +187,10 @@ resource "kubernetes_storage_class" "efs_sc" {
   storage_provisioner = "efs.csi.aws.com"
   reclaim_policy      = "Retain"
   parameters = {
-    type = "pd-standard",
+    type             = "pd-standard",
     provisioningMode = "efs-ap",
-    fileSystemId = aws_efs_file_system.stw_node_efs.id,
-    directoryPerms: "700" 
+    fileSystemId     = aws_efs_file_system.stw_node_efs.id,
+    directoryPerms : "700"
 
   }
 }
@@ -199,13 +199,13 @@ resource "aws_efs_file_system" "stw_node_efs" {
   tags = {
     Environment = "${var.environment}"
     Terraform   = "true"
-    Name = "efs-${var.name}-${var.environment}-cluster"
+    Name        = "efs-${var.name}-${var.environment}-cluster"
   }
-  
+
 }
 
 resource "aws_efs_mount_target" "stw_node_efs_mt" {
-  count = var.availability_zones_count
+  count           = var.availability_zones_count
   file_system_id  = aws_efs_file_system.stw_node_efs.id
   subnet_id       = aws_subnet.private[count.index].id
   security_groups = [aws_security_group.allow_nfs.id]
@@ -263,11 +263,11 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   // The name and description of the db subnet group
   name        = "${module.eks.cluster_name}-db-subnet-gp"
   description = "DB subnet group"
-  
+
   // Since the db subnet group requires 2 or more subnets, we are going to
   // loop through our private subnets in "rds_test_private_subnet" and
   // add them to this db subnet group
-  subnet_ids  = aws_subnet.public[*].id
+  subnet_ids = aws_subnet.public[*].id
 }
 
 resource "aws_docdb_cluster_instance" "cluster_instances" {
@@ -278,9 +278,10 @@ resource "aws_docdb_cluster_instance" "cluster_instances" {
 }
 
 resource "aws_docdb_cluster" "default" {
-  cluster_identifier = "${module.eks.cluster_name}-document-db"
-  availability_zones = data.aws_availability_zones.available.names
-  master_username    = "mongoadmin"
-  master_password    = "mong0PAssw0rd"
+  cluster_identifier   = "${module.eks.cluster_name}-document-db"
+  availability_zones   = data.aws_availability_zones.available.names
+  master_username      = "mongoadmin"
+  master_password      = "mong0PAssw0rd"
+  skip_final_snapshot  = true
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
 }
