@@ -264,10 +264,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   name        = "${module.eks.cluster_name}-db-subnet-gp"
   description = "DB subnet group"
 
-  // Since the db subnet group requires 2 or more subnets, we are going to
-  // loop through our private subnets in "rds_test_private_subnet" and
-  // add them to this db subnet group
-  subnet_ids = aws_subnet.public[*].id
+  subnet_ids = aws_subnet.private[*].id
 }
 
 resource "aws_docdb_cluster_instance" "cluster_instances" {
@@ -284,4 +281,23 @@ resource "aws_docdb_cluster" "default" {
   master_password      = "mong0PAssw0rd"
   skip_final_snapshot  = true
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+}
+
+### MKS Serverless ( Kafka )
+
+
+resource "aws_msk_serverless_cluster" "default" {
+  cluster_name = "${module.eks.cluster_name}-msk"
+
+  vpc_config {
+    subnet_ids         = aws_subnet.private[*].id
+  }
+
+  client_authentication {
+    sasl {
+      iam {
+        enabled = true
+      }
+    }
+  }
 }
