@@ -110,7 +110,7 @@ apply Addon Services:
   dependencies:
     - apply EKS infra
   when: manual
-  Testing Kubeconfig:
+Testing Kubeconfig:
   stage: apply
   script:
     - cd Terraform/addons/
