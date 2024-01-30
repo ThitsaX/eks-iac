@@ -99,7 +99,6 @@ apply EKS infra:
     - apk add curl
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.7.0/bin/linux/amd64/kubectl
     - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
-    - aws eks update-kubeconfig --region ${AWS_REGION} --name $(terraform output cluster_name | tr -d '"')6
     - kubectl get node --kubeconfig=/root/.kube/config
   dependencies:
     - plan EKS infra
