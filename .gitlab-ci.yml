@@ -70,7 +70,7 @@ validate:
     - aws s3 cp backend.tfstate s3://${BUCKET_NAME} --sse AES256
     - aws s3 cp backend.hcl s3://${BUCKET_NAME} --sse AES256
   dependencies:
-    - plan backend
+    - 1. plan backend
   when: manual
 4. apply update backend:
   stage: apply
@@ -97,7 +97,7 @@ validate:
     - aws eks update-kubeconfig --region ${AWS_REGION} --name $(terraform output cluster_name | tr -d '"')
     - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig  --sse AES256
   dependencies:
-    - plan EKS infra
+    - 2. plan EKS infra
   when: manual
 3. apply Addon Services:
   stage: apply
@@ -108,9 +108,9 @@ validate:
     - terraform apply --var-file=../env.hcl --auto-approve
     - terraform output cluster_name
   dependencies:
-    - apply EKS infra
+    - 2. apply EKS infra
   when: manual
-3.destroy backend:
+3. destroy backend:
   stage: destroy
   script:
     - cd Terraform/backend/
