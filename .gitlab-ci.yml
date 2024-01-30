@@ -110,6 +110,19 @@ apply Addon Services:
   dependencies:
     - apply EKS infra
   when: manual
+  Testing Kubeconfig:
+  stage: apply
+  script:
+    - cd Terraform/addons/
+    - aws s3 cp s3://${BUCKET_NAME}/backend.hcl . --sse AES256
+    - terraform init --backend-config=./backend.hcl
+    - terraform apply --var-file=../env.hcl --auto-approve
+    - terraform output cluster_name
+    - aws s3 s3://${BUCKET_NAME}/kubeconfig ~/.kube/config --sse AES256
+    - kubectl get node
+  dependencies:
+    - apply EKS infra
+  when: manual
 destroy backend:
   stage: destroy
   script:
