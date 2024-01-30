@@ -22,14 +22,14 @@ validate:
   script:
     - terraform validate
   when: manual
-plan backend:
+1. plan backend:
   stage: plan
   script:
     - cd Terraform/backend/
     - terraform init
     - terraform plan --var-file=../env.hcl
   when: manual
-plan update backend:
+4 .plan update backend:
   stage: plan
   script:
     - cd Terraform/backend/
@@ -40,7 +40,7 @@ plan update backend:
   dependencies:
     - validate
   when: manual
-plan EKS infra:
+2. plan EKS infra:
   stage: plan
   script:
     - cd Terraform/eks-setup/
@@ -50,7 +50,7 @@ plan EKS infra:
   dependencies:
     - validate
   when: manual
-plan Addons Services:
+3. plan Addons Services:
   stage: plan
   script:
     - cd Terraform/addons/
@@ -60,7 +60,7 @@ plan Addons Services:
   dependencies:
     - validate
   when: manual 
-apply backend:
+1. apply backend:
   stage: apply
   script:
     - cd Terraform/backend/
@@ -72,7 +72,7 @@ apply backend:
   dependencies:
     - plan backend
   when: manual
-apply update backend:
+4. apply update backend:
   stage: apply
   script:
     - cd Terraform/backend/
@@ -86,7 +86,7 @@ apply update backend:
   dependencies:
     - validate
   when: manual  
-apply EKS infra:
+2. apply EKS infra:
   stage: apply
   script:
     - cd Terraform/eks-setup/
@@ -99,7 +99,7 @@ apply EKS infra:
   dependencies:
     - plan EKS infra
   when: manual
-apply Addon Services:
+3. apply Addon Services:
   stage: apply
   script:
     - cd Terraform/addons/
@@ -110,7 +110,7 @@ apply Addon Services:
   dependencies:
     - apply EKS infra
   when: manual
-destroy backend:
+3.destroy backend:
   stage: destroy
   script:
     - cd Terraform/backend/
@@ -119,7 +119,7 @@ destroy backend:
     - mv backend.tfstate terraform.tfstate
     - terraform destroy --var-file=../env.hcl --auto-approve
   when: manual
-destroy eks infra:
+2. destroy eks infra:
   stage: destroy
   script:
     - cd Terraform/eks-setup/
@@ -127,7 +127,7 @@ destroy eks infra:
     - terraform init --backend-config=./backend.hcl
     - terraform destroy --var-file=../env.hcl --auto-approve
   when: manual
-destroy Addon services:
+1. destroy Addon services:
   stage: destroy
   script:
     - cd Terraform/addons/
