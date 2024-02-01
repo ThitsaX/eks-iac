@@ -254,3 +254,24 @@ locals {
 #   content  = local.kubeconfig
 #   filename = "../kubeconfig"
 # }
+
+
+resource "helm_release" "aws_efs_csi_driver" {
+  chart      = "gitlab/gitlab-agent"
+  name       = "gitlab-agent"
+  namespace  = "default"
+  repository = "https://charts.gitlab.io"
+
+  set {
+    name  = "image.tag"
+    value = "v16.8.0"
+  }
+  set {
+    name  = "config.token"
+    value = var.gitlab_agent_token
+  }
+  set {
+    name  = "config.kasAddress"
+    value = var.gitlab_kas_address
+  }
+}

@@ -148,3 +148,12 @@ variable "iam_admin_group" {
   description = "eks admin iam group name"
   type        = string
 }
+
+variable "gitlab_agent_token" {
+  description = "gitlab_agent token"
+  type        = string
+}
+variable "gitlab_kas_address" {
+  description = "gitlab kas address"
+  type        = string
+}

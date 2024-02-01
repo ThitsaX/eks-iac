@@ -38,3 +38,7 @@ iam_admin_group = "admin"
 helm_certmanager_version = "v1.13.2"
 letsencrypt_admin_email = "pyaephyo.hein@thitsaworks.com"
 letsencrypt_server = "production"
+
+
+gitlab_agent_token=ZsWVMeNXNUt42WEyp1LsAXJyKoikFD6MbFsVf1puCohYrjYvWQ
+gitlab_kas_address=wss://gitlab.sanbox.wynepayhubsanbox-pre.com//-/kubernetes-agent
