@@ -257,7 +257,7 @@ locals {
 
 
 resource "helm_release" "gitlab_agent" {
-  chart      = "gitlab/gitlab-agent"
+  chart      = "gitlab-agent"
   name       = "gitlab-agent"
   namespace  = "default"
   repository = "https://charts.gitlab.io"
