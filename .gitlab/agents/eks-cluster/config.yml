@@ -1,0 +1,13 @@
+gitops:
+  manifest_projects:
+  - id: devops/eks-iac
+    ref: # either `branch`, `tag` or `commit` can be specified
+      branch: main
+      # commit: <mysha>
+      # tag: v1.0
+    reconcile_timeout: 3600s
+    dry_run_strategy: none
+    prune: true
+    prune_timeout: 3600s
+    prune_propagation_policy: foreground
+    inventory_policy: must_match
