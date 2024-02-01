@@ -4,7 +4,7 @@ stages:
   - apply
   - destroy
 image:
-  name: hashicorp/terraform:1.5.5
+  name: pyaephyohein/tfrunner:1.0
   entrypoint:
     - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'

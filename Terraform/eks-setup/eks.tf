@@ -301,3 +301,5 @@ resource "aws_msk_serverless_cluster" "default" {
     }
   }
 }
+
+### Vault
