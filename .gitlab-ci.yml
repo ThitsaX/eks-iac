@@ -4,7 +4,7 @@ stages:
   - apply
   - destroy
 image:
-  name: pyaephyohein/tfrunner:1.0
+  name: pyaephyohein/tfrunner:1.1
   entrypoint:
     - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
@@ -14,9 +14,8 @@ before_script:
   - export AWS_DEFAULT_REGION=${AWS_REGION}
   - rm -rf .terraform
   - terraform --version
-  - apk --no-cache add python3 py3-pip
-  - pip3 install --upgrade pip
-  - pip3 install --no-cache-dir awscli
+  - kubectl version
+  - aws --version
 validate:
   stage: validate
   script:
