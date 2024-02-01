@@ -261,6 +261,7 @@ resource "helm_release" "gitlab_agent" {
   name       = "gitlab-agent"
   namespace  = "default"
   repository = "https://charts.gitlab.io"
+  verify = false
 
   set {
     name  = "image.tag"
