@@ -256,7 +256,7 @@ locals {
 # }
 
 
-resource "helm_release" "aws_efs_csi_driver" {
+resource "helm_release" "gitlab_agent" {
   chart      = "gitlab/gitlab-agent"
   name       = "gitlab-agent"
   namespace  = "default"
