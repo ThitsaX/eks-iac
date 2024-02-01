@@ -14,8 +14,6 @@ before_script:
   - export AWS_DEFAULT_REGION=${AWS_REGION}
   - rm -rf .terraform
   - terraform --version
-  - kubectl version
-  - aws --version
 validate:
   stage: validate
   script:
