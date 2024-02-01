@@ -11,3 +11,8 @@ gitops:
     prune_timeout: 3600s
     prune_propagation_policy: foreground
     inventory_policy: must_match
+ci_access:
+  projects:
+    - id: devops/eks-iac
+      ref:
+        branch: main

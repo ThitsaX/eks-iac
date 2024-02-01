@@ -91,8 +91,11 @@ validate:
     - terraform init --backend-config=./backend.hcl
     - terraform apply --var-file=../env.hcl --auto-approve
     - terraform output cluster_name
-    - aws eks update-kubeconfig --region ${AWS_REGION} --name $(terraform output cluster_name | tr -d '"')
-    - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig  --sse AES256
+    # - aws eks update-kubeconfig --region ${AWS_REGION} --name $(terraform output cluster_name | tr -d '"')
+    # - aws s3 cp ~/.kube/config s3://${BUCKET_NAME}/kubeconfig  --sse AES256
+    - kubectl config get-contexts
+    - kubectl config use-context devops/eks-iac:eks-cluster
+    - kubectl get nodes
   dependencies:
     - 2. plan EKS infra
   when: manual
