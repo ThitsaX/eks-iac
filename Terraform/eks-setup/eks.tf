@@ -265,7 +265,7 @@ resource "helm_release" "gitlab_agent" {
 
   set {
     name  = "image.tag"
-    value = "v16.8.0"
+    value = "v14.10.0"
   }
   set {
     name  = "config.token"
