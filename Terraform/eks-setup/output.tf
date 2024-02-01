@@ -9,10 +9,7 @@ output "cluster_endpoint" {
 output "cluster_ca_certificate" {
   value = module.eks.cluster_certificate_authority_data
 }
-output "kubeconfig" {
-  sensitive = true
-  value     = local.kubeconfig
-}
-output "documentdb_enpoint" {
-  value = aws_docdb_cluster.default.endpoint
-}
+# output "kubeconfig" {
+#   sensitive = true
+#   value     = local.kubeconfig
+# }
